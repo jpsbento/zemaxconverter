@@ -2,14 +2,27 @@ import numpy as np
 import csv
 
 
-a = np.genfromtxt('original.txt', delimiter=',')
+original = np.genfromtxt('original.txt', delimiter=',')
 
-l=[]
-for y in range(np.shape(a)[0]):
-    for x in range(np.shape(a)[1]):
-        if not np.isnan(a[x,y]):
-            l.append([y,x,a[x,y]])
+xdel=1.0
+ydel=1.0
 
-with open("out.csv", "w", newline="") as f:
-    writer = csv.writer(f)
-    writer.writerows(l)
+result=[]
+result.append([np.shape(original)[1], np.shape(original)[0], xdel, ydel, 0, 0.0, 0.0])
+
+
+def buildLine(value):
+    return [value, 0.0, 0.0, 0.0, 0]
+
+
+for value in original.flatten():
+    if np.isnan(value):
+        result.append(buildLine(0.0))
+    else:
+        result.append(buildLine(value))
+
+
+
+with open("out.txt", "w", newline="") as f:
+    writer = csv.writer(f, delimiter='\t')
+    writer.writerows(result)
